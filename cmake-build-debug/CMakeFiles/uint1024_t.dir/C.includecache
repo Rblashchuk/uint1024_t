@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-D:/Projects/uint1024_t/main.c
+C:/Users/rblas/CLionProjects/uint1024_t/main.c
 stdio.h
 -
 stdint.h
@@ -14,6 +14,8 @@ stdint.h
 memory.h
 -
 string.h
+-
+math.h
 -
 stdlib.h
 -

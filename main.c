@@ -2,15 +2,14 @@
 #include <stdint.h>
 #include <memory.h>
 #include <string.h>
+#include <math.h>
 #include <stdlib.h>
 
-struct uint1024_t
-{
+struct uint1024_t {
     uint32_t a[32];
 };
 
-struct uint1024_t from_uint(uint32_t a)
-{
+struct uint1024_t from_uint(uint32_t a) {
     uint32_t ans[32];
     for (int i = 31; i >= 0; i--) ans[i] = 0;
     ans[0] = a;
@@ -22,23 +21,22 @@ struct uint1024_t from_uint(uint32_t a)
     printf("\n\n");
     return ans1024;
 }
-struct uint1024_t add_op(struct uint1024_t first, struct uint1024_t second)
-{
+
+struct uint1024_t add_op(struct uint1024_t first, struct uint1024_t second) {
     short int carryover = 0;
     short int carried;
     uint32_t ans[32];
-    for (int i = 0; i < 32; i++){
+    for (int i = 0; i < 32; i++) {
         carried = 0;
-        if(carryover){
+        if (carryover) {
             carried = 1;
             carryover = 0;
         }
         ans[i] = first.a[i] + second.a[i];
-        if(ans[i] < first.a[i]) {
+        if (ans[i] < first.a[i]) {
             carryover = 1;
-            if(carried) ans[i]++;
-        }
-        else {
+            if (carried) ans[i]++;
+        } else {
             if (carried) {
                 if (!(ans[i] + 1)) carryover = 1;
                 ans[i]++;
@@ -48,9 +46,13 @@ struct uint1024_t add_op(struct uint1024_t first, struct uint1024_t second)
 
     struct uint1024_t ans1024 = {*ans};
     memcpy(ans1024.a, ans, 128);
+    printf("=====add_op=====\n");
+    for (int i = 31; i >= 0; i--) printf("%x ", ans1024.a[i]);
+    printf("\n\n");
     return ans1024;
 
 }
+
 void printf_value(struct uint1024_t val) {
     short int flag = 0;
 
@@ -73,23 +75,47 @@ void printf_value(struct uint1024_t val) {
     }
 }
 
-void scanf_valuehex(){
+struct uint1024_t scanf_value_hex() {
+
     char line[128];
-    scanf("%[^\n]", line);
-    for (int i = strlen(line) - 1; i >= 0; i = i - 8) {
-        char hexline[8];
-        int cnt = 0;
-        char *c;
-        while (cnt < 8 && line[i + cnt] != *"\0"){
-            hexline[7 - cnt] = line[i + cnt];
-            cnt--;
-        }
-        uint32_t hexnum = strtoul(hexline, NULL, 16);
-        printf("%08x ", hexnum);
+    scanf("%128s", line);
+    printf(line);
+    uint8_t n = strlen(line);
+    uint8_t p = 0;
+    int64_t val = 0;
+    uint32_t ans[32];
+    for (int i = 0; i < 32; i++){
+        ans[i] = 0;
     }
+    uint8_t ind_res = 0;
+
+    for (int i = n - 1; i >= 0; i--) {
+        char c = line[i];
+        if (c - '0' >= 10) {
+            val = val + (c - 'a' + 10) * (int) (pow(16, p));
+        } else {
+            val = val + (c - '0') * (int) (pow(16, p));
+        }
+
+        p++;
+        if (p == 8) {
+            p = 0;
+            ans[ind_res] = val;
+            val = 0;
+            ind_res++;
+        }
+    }
+    ans[ind_res] = val;
+
+    struct uint1024_t ans1024 = {*ans};
+    memcpy(ans1024.a, ans, 128);
+    printf("=====scanned=====\n");
+    for (int i = 31; i >= 0; i--) printf("%x ", ans1024.a[i]);
+    printf("\n\n");
+    return ans1024;
+
 }
 
 int main() {
-    scanf_valuehex();
     return 0;
 }
