@@ -9,6 +9,7 @@ struct uint1024_t {
     uint32_t a[32];
 };
 
+
 int hex_digit_to_dec(char digit){
     if (digit - '0' >= 10) {
         return (digit - 'a' + 10);
@@ -75,6 +76,7 @@ struct uint1024_t from_string(char str[128]){
     uint8_t p = 0;
     int64_t val = 0;
     uint32_t ans[32];
+
     for (int i = 0; i < 32; i++) {
         ans[i] = 0;
     }
@@ -148,8 +150,12 @@ struct uint1024_t add_op(struct uint1024_t first, struct uint1024_t second) {
 
 struct uint1024_t subtr_op(struct uint1024_t first, struct uint1024_t second) {
     uint8_t carryover = 0;
-    uint8_t carried;
+    uint8_t carried = 0;
     uint32_t ans[32];
+    for (int i = 0; i < 32; i++){
+        ans[i] = 0;
+    }
+
     for (int i = 0; i < 32; i++) {
         carried = 0;
         if (carryover) {
@@ -235,7 +241,7 @@ struct uint1024_t mult_op(struct uint1024_t first, struct uint1024_t second){
     struct uint1024_t ans1024 = from_string(ans_str);
 
     printf("=====multiplied=====\n");
-    for(int i = 0; i < 32; i++){
+    for(int i = 31; i >= 0; i--){
         printf("%x ", ans1024.a[i]);
     }
     printf("\n");
@@ -243,7 +249,7 @@ struct uint1024_t mult_op(struct uint1024_t first, struct uint1024_t second){
 }
 
 
-struct uint1024_t scanf_value_hex() {
+struct uint1024_t scan_value_hex() {
     char line[128];
     scanf("%128s", line);
     printf(line);
@@ -255,6 +261,7 @@ struct uint1024_t scanf_value_hex() {
     return ans1024;
 }
 
+
 void print_value_hex(struct uint1024_t a) {
     char ans[128] = "";
     to_string(ans, a);
@@ -263,10 +270,68 @@ void print_value_hex(struct uint1024_t a) {
 
 
 int main() {
-    struct uint1024_t a = scanf_value_hex();
-    struct uint1024_t b = scanf_value_hex();
-    struct uint1024_t c = mult_op(a, b);
-    printf("\n");
-    print_value_hex(c);
-    return 0;
+    char request[16];
+    while(request[0] - '0'){
+
+        printf("\nrequest:\n");
+        scanf("%16s", request);
+
+        if (request[0] == 'a'){
+            printf("input two uint1024_t strings\n");
+            struct uint1024_t a;
+            struct uint1024_t b;
+            struct uint1024_t sum;
+            a = scan_value_hex();
+            b = scan_value_hex();
+            sum = add_op(a,b);
+
+            printf("response: ");
+            print_value_hex(sum);
+            printf("______________\n");
+            continue;
+        }
+
+        if (request[0] == 's'){
+            printf("input two uint1024_t strings\n");
+            struct uint1024_t a;
+            struct uint1024_t b;
+            struct uint1024_t diff;
+            a = scan_value_hex();
+            b = scan_value_hex();
+            diff = subtr_op(a,b);
+
+            printf("response: ");
+            print_value_hex(diff);
+            printf("______________\n");
+            continue;
+        }
+
+        if (request[0] == 'm'){
+            printf("input two uint1024_t strings\n");
+            struct uint1024_t a;
+            struct uint1024_t b;
+            struct uint1024_t product;
+            a = scan_value_hex();
+            b = scan_value_hex();
+            product = mult_op(a,b);
+
+            printf("response: ");
+            print_value_hex(product);
+            printf("______________\n");
+            continue;
+        }
+
+        if (request[0] == 'f'){
+            printf("input uint32_t\n");
+            uint32_t a;
+            scanf("%d", &a);
+            struct uint1024_t res = from_uint(a);
+
+            printf("response: ");
+            print_value_hex(res);
+            printf("______________\n");
+            continue;
+        }
+        printf("unknown request.\n");
+    }
 }
