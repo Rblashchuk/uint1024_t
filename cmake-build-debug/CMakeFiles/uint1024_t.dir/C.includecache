@@ -6,17 +6,3 @@
 
 #IncludeRegexTransform: 
 
-C:/Users/rblas/CLionProjects/uint1024_t/main.c
-stdio.h
--
-stdint.h
--
-memory.h
--
-string.h
--
-math.h
--
-stdlib.h
--
-

@@ -117,6 +117,20 @@ struct uint1024_t from_uint(uint32_t a) {
 }
 
 
+int comp(struct uint1024_t first, struct uint1024_t second){
+    int ans = 1;
+    for (int i = 0; i < 32; i++){
+        if (first.a[i] == second.a[i]){
+            continue;
+        }
+        else{
+            ans = 0;
+            break;
+        }
+    }
+    return ans;
+}
+
 struct uint1024_t add_op(struct uint1024_t first, struct uint1024_t second) {
     uint8_t carryover = 0;
     uint8_t carried;
@@ -229,7 +243,7 @@ struct uint1024_t mult_op(struct uint1024_t first, struct uint1024_t second){
         carryover = 0;
     }
 
-    char ans_str[128];
+    char ans_str[129];
     for (int i = 0; i < 128; i++){
         ans_str[i] = 0;
     }
@@ -268,7 +282,7 @@ void print_value_hex(struct uint1024_t a) {
     printf("%s\n", ans);
 }
 
-
+/*
 int main() {
     char request[16];
     while(request[0] - '0'){
@@ -335,3 +349,4 @@ int main() {
         printf("unknown request.\n");
     }
 }
+*/
